@@ -19,6 +19,10 @@ It runs on an old Android phone: FastAPI + React in Termux, reached from anywher
   (Free accounts: up to 10 MB per video; paid: up to 100 MB.)
 -->
 
+https://github.com/user-attachments/assets/17635f4f-7210-4b08-ac8c-5997d488d172
+
+
+
 
 ## What it does
 
