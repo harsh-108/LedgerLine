@@ -1,0 +1,26 @@
+# Exact versions, all tested together (114+ backend tests, 2026-10-11).
+# Pinned on purpose: on 2026-10-08 an unrelated `pip install streamlit`
+# upgraded starlette under an older fastapi and the server stopped
+# starting. Install into the project's own environment (setup_venv.bat),
+# and upgrade deliberately: bump a version here, run the tests, then
+# re-run setup_venv.bat.
+#
+# The phone (Termux) does not use this file: deploy/termux/setup.sh
+# installs Android builds and pins the web stack itself.
+fastapi==0.143.0
+starlette==1.7.0
+pydantic==2.10.4
+pydantic-core==2.27.2
+anyio==4.14.2
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+pandas==2.3.3
+numpy==2.4.6
+requests==2.34.2
+yfinance==1.7.0
+curl_cffi==0.16.3
+plotly==7.0.0
+scikit-learn==1.9.1
+scipy==1.17.1
+pypdf==5.1.0
+openpyxl==3.1.5
