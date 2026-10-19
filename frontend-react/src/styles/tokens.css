@@ -1,0 +1,49 @@
+/* Design tokens from the Ledgerline mockups. Change a value here and it
+   changes everywhere. The dark theme overrides the same names. */
+:root {
+  --ink: #10233f;
+  --ground: #edf1f5;
+  --surface: #ffffff;
+  --line: #dce3ec;
+  --text-2: #3f4f66;
+  --text-3: #5b6b82;
+  --action: #2456e6;
+  --action-tint: #e6ecfd;
+  --on-action: #ffffff;
+  --guide: #f2b33d;
+  --guide-tint: #fdf3dc;
+  --guide-text: #7a4b00;
+  --gain: #0a7d4f;
+  --gain-tint: #e0f3e9;
+  --loss: #c9302c;
+  --loss-tint: #fbe6e5;
+  --teal: #0e8f9c;
+  --ipo: #6a3fc9;          /* IPO / new-fund events on the calendar */
+  --ipo-tint: #eee8fb;
+  --slate: #8493ab;
+  --ribbon: #10233f;
+  --ribbon-line: #2a4268;
+  --radius-card: 14px;
+  --font-body: "Onest", system-ui, sans-serif;
+  --font-display: "Schibsted Grotesk", "Onest", system-ui, sans-serif;
+}
+:root[data-theme="dark"] {
+  --ink: #e8eef7;
+  --ground: #0b1524;
+  --surface: #121f33;
+  --line: #24364f;
+  --text-2: #b4c2d6;
+  --text-3: #8a9bb3;
+  --action: #7d97ff;
+  --action-tint: #1b2b4d;
+  --on-action: #0b1524;
+  --guide-tint: #3a2e12;
+  --guide-text: #f2c66a;
+  --gain: #4fd197;
+  --gain-tint: #12352a;
+  --loss: #ff8a80;
+  --loss-tint: #3d1d1f;
+  --ipo: #c9b3ff;
+  --ipo-tint: #2a1f4d;
+  --ribbon: #060d18;
+}

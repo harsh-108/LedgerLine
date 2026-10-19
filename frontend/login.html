@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in · Watchlist Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#09090B; --surface:#131316; --border:#232329; --text:#EFEFF1;
+  --muted:#71717A; --primary:#2563EB; --primary-dim:rgba(37,99,235,.12);
+  --down:#EF4444; --mono:'JetBrains Mono',monospace;
+  --display:'Space Mono',monospace; --sans:'DM Sans',sans-serif;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  font-family:var(--sans); background:var(--bg); color:var(--text);
+  min-height:100vh; display:grid; place-items:center;
+}
+.card {
+  width:min(400px,92vw); background:var(--surface);
+  border:1px solid var(--border); border-radius:14px; padding:32px 30px;
+  animation:card-in .4s cubic-bezier(.3,.8,.3,1);
+}
+@keyframes card-in { from { opacity:0; transform:translateY(12px) scale(.985); } }
+.logo { width:34px; height:34px; stroke:var(--primary); fill:none;
+  stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round;
+  margin-bottom:14px; display:block; }
+.logo .line { stroke-dasharray:24; stroke-dashoffset:24;
+  animation:draw .8s .25s ease-out forwards; }
+.logo .tip { opacity:0; animation:pop .3s 1s ease-out forwards; }
+@keyframes draw { to { stroke-dashoffset:0; } }
+@keyframes pop { from { opacity:0; transform:translateY(2px); } to { opacity:1; } }
+@media (prefers-reduced-motion:reduce){
+  .card,.logo .line,.logo .tip{animation:none} .logo .line{stroke-dashoffset:0}
+  .logo .tip{opacity:1}
+}
+.kicker { font-family:var(--mono); font-size:.62rem; letter-spacing:.28em;
+  color:var(--primary); text-transform:uppercase; }
+h1 { font-family:var(--display); font-size:1.5rem; margin:6px 0 4px;
+  text-shadow:0 0 32px var(--primary-dim); }
+.sub { color:var(--muted); font-size:.82rem; margin-bottom:22px; }
+label { display:block; font-size:.72rem; color:var(--muted);
+  margin:14px 0 6px; letter-spacing:.04em; }
+input {
+  width:100%; background:var(--bg); border:1px solid var(--border);
+  border-radius:9px; padding:10px 12px; color:var(--text);
+  font-family:var(--mono); font-size:.9rem;
+}
+input:focus { outline:none; border-color:var(--primary);
+  box-shadow:0 0 0 3px var(--primary-dim); }
+button {
+  width:100%; margin-top:20px; padding:11px; border:none; cursor:pointer;
+  border-radius:9px; background:var(--primary); color:#fff;
+  font-family:var(--sans); font-weight:600; font-size:.9rem;
+  transition:box-shadow .15s;
+}
+button:hover { box-shadow:0 0 18px rgba(37,99,235,.35); }
+.err { margin-top:14px; font-size:.8rem; color:var(--down);
+  border:1px solid rgba(239,68,68,.35); border-radius:8px;
+  padding:8px 12px; display:none; }
+.note { margin-top:18px; font-size:.72rem; color:var(--muted);
+  line-height:1.5; }
+#forgot { margin-top:10px; }
+code { font-family:var(--mono); font-size:.7rem; color:var(--text);
+  background:var(--bg); padding:1px 5px; border-radius:4px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <svg class="logo" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M3.5 3.5V20.5H20.5"/>
+    <path class="line" d="M6 16.5l4-4.5 3 2.5 6-7"/>
+    <path class="tip" d="M15.6 7.5H19v3.4"/>
+  </svg>
+  <div class="kicker">Personal terminal</div>
+  <h1>Watchlist Tracker</h1>
+  <p class="sub" id="mode-sub">Sign in to continue.</p>
+  <form id="f">
+    <label for="u">Username</label>
+    <input id="u" autocomplete="username" required>
+    <label for="p">Password</label>
+    <input id="p" type="password" autocomplete="current-password" required>
+    <button id="go" type="submit">Sign in</button>
+  </form>
+  <div class="err" id="err"></div>
+  <p class="note" id="note">Local app, local accounts — nothing here leaves
+    your machine. Sessions last 30 days.</p>
+  <p class="note" id="forgot">Forgot your username or password? There is no
+    email reset (nothing leaves this machine). On the computer running the
+    app, run <code>python scripts/reset_password.py</code> — it lists the
+    accounts and resets one password, touching nothing else.</p>
+</div>
+<script>
+let firstRun = false;
+fetch("/api/auth/status").then(r => r.json()).then(d => {
+  if (!d.has_users) {
+    firstRun = true;
+    document.getElementById("mode-sub").textContent =
+      "No accounts yet — create the first one (it becomes the admin).";
+    document.getElementById("go").textContent = "Create account & sign in";
+    document.getElementById("p").autocomplete = "new-password";
+    document.getElementById("note").textContent =
+      "Pick a password of 8+ characters. It is hashed (PBKDF2) before " +
+      "storage and never leaves this machine.";
+  }
+});
+document.getElementById("f").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const err = document.getElementById("err");
+  err.style.display = "none";
+  const body = JSON.stringify({
+    username: document.getElementById("u").value,
+    password: document.getElementById("p").value,
+  });
+  const url = firstRun ? "/api/auth/setup" : "/api/auth/login";
+  try {
+    const r = await fetch(url, { method: "POST",
+      headers: { "Content-Type": "application/json" }, body });
+    if (!r.ok) throw new Error((await r.json()).detail || r.statusText);
+    const d = await r.json();
+    // first sign-in with an AIGO-emailed temporary password
+    location.href = d.must_change_password ? d.redirect : "/";
+  } catch (ex) {
+    err.textContent = ex.message; err.style.display = "block";
+  }
+});
+</script>
+</body>
+</html>

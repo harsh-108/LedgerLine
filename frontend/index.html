@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watchlist Tracker</title>
+<link rel="manifest" href="/static/manifest.json">
+<meta name="theme-color" content="#09090B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>try{var t=localStorage.getItem("wt-theme");if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<link rel="stylesheet" href="/static/css/styles.css">
+<script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+</head>
+<body>
+
+<!-- ============================ ICON SPRITE ============================
+     itshover-style animated icons: plain stroked SVG symbols; all motion
+     lives in CSS (hover/active states), meaning-driven not decorative. -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24">
+    <path class="p-roof" d="M3.5 10.6L12 3.6l8.5 7"/>
+    <path d="M5.5 9.5V20h13V9.5"/><path class="p-door" d="M10 20v-5.5h4V20"/>
+  </symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24">
+    <path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12z"/>
+    <circle class="p-pupil" cx="12" cy="12" r="2.6"/>
+  </symbol>
+  <symbol id="i-pie" viewBox="0 0 24 24">
+    <path d="M12 3.2A8.8 8.8 0 1 0 20.8 12H12z"/>
+    <path class="p-slice" d="M14.5 2.7a8.8 8.8 0 0 1 6.8 6.8h-6.8z"/>
+  </symbol>
+  <symbol id="i-funnel" viewBox="0 0 24 24">
+    <path d="M3.5 5h17l-6.5 7.6v5.6l-4 2.2v-7.8z"/>
+  </symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24">
+    <path class="p-star" d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9z"/>
+    <path class="p-star2" d="M19 16.2l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>
+  </symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24">
+    <path d="M3.5 3.5V20.5H20.5"/>
+    <line class="p-bar p-bar1" x1="8"  y1="20" x2="8"  y2="13"/>
+    <line class="p-bar p-bar2" x1="12.5" y1="20" x2="12.5" y2="9"/>
+    <line class="p-bar p-bar3" x1="17" y1="20" x2="17" y2="5.5"/>
+  </symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24">
+    <path d="M3.5 3.5V20.5H20.5"/>
+    <path class="p-line" d="M6 16.5l4-4.5 3 2.5 6-7"/>
+    <path class="p-tip" d="M15.6 7.5H19v3.4"/>
+  </symbol>
+  <symbol id="i-book" viewBox="0 0 24 24">
+    <path d="M12 6.2C10.2 4.6 7.6 4.2 3.5 4.4v13.8c4.1-.2 6.7.3 8.5 1.8 1.8-1.5 4.4-2 8.5-1.8V4.4c-4.1-.2-6.7.2-8.5 1.8z"/>
+    <line x1="12" y1="6.4" x2="12" y2="19.6"/>
+  </symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24">
+    <rect class="p-d1" x="4" y="4" width="7" height="7" rx="1.8"/>
+    <rect class="p-d2" x="13" y="4" width="7" height="7" rx="1.8"/>
+    <rect class="p-d3" x="4" y="13" width="7" height="7" rx="1.8"/>
+    <rect class="p-d4" x="13" y="13" width="7" height="7" rx="1.8"/>
+  </symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24">
+    <path d="M20 12a8 8 0 1 1-2.5-5.8"/><path d="M20 3.8v4.4h-4.4"/>
+  </symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24">
+    <path d="M12 3l7.5 2.8v5.4c0 4.6-3 8.1-7.5 9.8-4.5-1.7-7.5-5.2-7.5-9.8V5.8z"/>
+    <path class="p-tick" d="M8.8 12.2l2.4 2.4 4-4.6"/>
+  </symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24">
+    <path class="p-bell" d="M18 15.5v-5a6 6 0 1 0-12 0v5l-1.8 2.6h15.6z"/>
+    <path class="p-bell" d="M10.3 20.5a2 2 0 0 0 3.4 0"/>
+  </symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24">
+    <path d="M9.5 3.5h5M10.5 3.5v5.2L4.8 18.4a1.8 1.8 0 0 0 1.6 2.6h11.2a1.8 1.8 0 0 0 1.6-2.6L13.5 8.7V3.5"/>
+    <line class="p-bub1" x1="10" y1="15.5" x2="10" y2="15.5"/>
+    <line class="p-bub2" x1="13.5" y1="13.5" x2="13.5" y2="13.5"/>
+  </symbol>
+  <symbol id="i-fund" viewBox="0 0 24 24">
+    <path class="p-layer p-l1" d="M12 4.2l8 4-8 4-8-4z"/>
+    <path class="p-layer p-l2" d="M4 12.4l8 4 8-4"/>
+    <path class="p-layer p-l3" d="M4 16.6l8 4 8-4"/>
+  </symbol>
+  <symbol id="i-target" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8.5"/>
+    <circle class="p-ring" cx="12" cy="12" r="5"/>
+    <circle class="p-bull" cx="12" cy="12" r="1.6"/>
+  </symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24">
+    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+  </symbol>
+</svg>
+
+<nav class="rail">
+  <div class="brand" id="brandHome" title="Home" role="button" tabindex="0">
+    <div class="brand-kicker">Personal Terminal</div>
+    <div class="brand-name">Watchlist<br>Tracker</div>
+  </div>
+  <div class="rail-links">
+    <button class="rail-link active" data-page="home">
+      <svg class="ico ico-home"><use href="#i-home"/></svg><span>Home</span></button>
+    <button class="rail-link" data-page="watchlist">
+      <svg class="ico ico-eye"><use href="#i-eye"/></svg><span>Watchlist</span></button>
+    <button class="rail-link" data-page="portfolio">
+      <svg class="ico ico-pie"><use href="#i-pie"/></svg><span>Portfolio</span></button>
+    <button class="rail-link" data-page="funds">
+      <svg class="ico ico-fund"><use href="#i-fund"/></svg><span>Funds</span></button>
+    <button class="rail-link" data-page="screener">
+      <svg class="ico ico-funnel"><use href="#i-funnel"/></svg><span>Screener</span></button>
+    <button class="rail-link" data-page="ailab">
+      <svg class="ico ico-spark"><use href="#i-spark"/></svg><span>AI Lab</span></button>
+    <button class="rail-link" data-page="backtest">
+      <svg class="ico ico-chart"><use href="#i-chart"/></svg><span>Backtest</span></button>
+    <button class="rail-link" data-page="scorecard">
+      <svg class="ico ico-target"><use href="#i-target"/></svg><span>Scorecard</span></button>
+    <button class="rail-link" data-page="journal">
+      <svg class="ico ico-book"><use href="#i-book"/></svg><span>Journal</span></button>
+    <button class="rail-link" data-page="more">
+      <svg class="ico ico-grid"><use href="#i-grid"/></svg><span>More</span></button>
+  </div>
+  <div class="rail-foot">
+    <div class="rail-user">
+      <span id="railUser" class="mono"></span>
+      <button id="themeBtn" class="btn btn-small" title="Switch light / dark">◐</button>
+      <button id="addUserBtn" class="btn btn-small" title="Create another sign-in account">+ user</button>
+      <button id="logoutBtn" class="btn btn-small">Sign out</button>
+    </div>
+    <div id="railStatus" class="rail-status">—</div>
+    <div class="rail-note">Signals are prompts to investigate, never instructions.</div>
+  </div>
+</nav>
+
+<main class="main">
+  <div id="tapeWrap" class="tape-wrap hidden" title="Portfolio first, then watchlist — hover to pause">
+    <div id="tape" class="tape"></div>
+  </div>
+  <header class="topbar">
+    <input id="search" class="search" type="text" placeholder="Search watchlist…">
+    <div class="topbar-right">
+      <span id="freshness" class="freshness">—</span>
+      <button id="nseBtn" class="btn btn-ico" title="Validate closes vs NSE official + fetch delivery %">
+        <svg class="ico ico-shield"><use href="#i-shield"/></svg>NSE sync</button>
+      <button id="refreshBtn" class="btn btn-primary btn-ico">
+        <svg class="ico ico-refresh"><use href="#i-refresh"/></svg>Refresh data</button>
+    </div>
+  </header>
+  <div id="refreshLog" class="refresh-log hidden"></div>
+
+  <!-- ============================== HOME =============================== -->
+  <section id="page-home" class="page">
+    <div class="page-head"><h1 class="h1-ico"><svg class="ico ico-home"><use href="#i-home"/></svg>Home</h1></div>
+    <div id="homeCards" class="summary-row"></div>
+    <div class="grid-2">
+      <div>
+        <div class="card">
+          <div class="card-head"><h3>Today's movers</h3>
+            <button class="btn" data-goto="watchlist">Watchlist →</button></div>
+          <div id="homeMovers"></div>
+        </div>
+        <div id="homeTierCard" class="card hidden">
+          <h3 class="h3-ico"><svg class="ico ico-spark"><use href="#i-spark"/></svg>Checklist tier changes</h3>
+          <p class="hint">Stocks whose research-checklist verdict moved
+            recently — upgrades are often worth a look first.</p>
+          <div id="homeTiers"></div>
+        </div>
+        <div id="homeScoreCard" class="card hidden">
+          <div class="card-head"><h3 class="h3-ico"><svg class="ico ico-target"><use href="#i-target"/></svg>App track record</h3>
+            <button class="btn" data-goto="scorecard">Scorecard →</button></div>
+          <div id="homeScore"></div>
+        </div>
+        <div id="homeEarnCard" class="card hidden">
+          <h3>Results this week</h3>
+          <div id="homeEarnings"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>Latest journal entries</h3>
+            <button class="btn" data-goto="journal">Journal →</button></div>
+          <div id="homeJournal"></div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-head"><h3>Portfolio</h3>
+            <button class="btn" data-goto="portfolio">Open →</button></div>
+          <div id="homePf"></div>
+        </div>
+        <div class="card">
+          <h3>Quick actions</h3>
+          <div class="home-actions">
+            <button class="btn" data-goto="screener">Screen stocks</button>
+            <button class="btn" data-goto="backtest">Test a strategy</button>
+            <button class="btn" data-goto="ailab">Factor rankings</button>
+            <button class="btn" id="homeRefresh">Refresh data</button>
+          </div>
+          <p class="hint">Tip: press <b>/</b> anywhere to search the watchlist.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ WATCHLIST ============================ -->
+  <section id="page-watchlist" class="page hidden">
+    <div class="page-head">
+      <h1 class="h1-ico"><svg class="ico ico-eye"><use href="#i-eye"/></svg>Watchlist</h1>
+      <div class="add-row">
+        <div class="suggest-wrap">
+          <input id="addSymbol" type="text" placeholder="Add ticker · type 2+ letters" autocomplete="off">
+          <div id="suggestBox" class="suggest-box hidden"></div>
+        </div>
+        <select id="addType" title="Mutual funds are searched by scheme name on mfapi.in (AMFI)"><option value="stock">Stock</option><option value="etf">ETF</option><option value="mf">Mutual fund</option></select>
+        <button id="addBtn" class="btn">Add</button>
+      </div>
+    </div>
+    <div id="addMsg" class="inline-msg hidden"></div>
+    <div id="wlSummary" class="summary-row"></div>
+    <div class="view-toggle">
+      <button id="viewList" class="btn btn-small active-view">List</button>
+      <button id="viewHeat" class="btn btn-small">Heatmap</button>
+    </div>
+    <div id="wlHeatmap" class="heatmap hidden"></div>
+    <div id="wlList" class="wl-list"><div class="skel"><div class="skel-row"></div><div class="skel-row"></div><div class="skel-row"></div><div class="skel-row"></div><div class="skel-row"></div></div></div>
+
+    <div class="card" id="alertsCard">
+      <div class="card-head"><h3 class="h3-ico"><svg class="ico ico-bell"><use href="#i-bell"/></svg>Alerts</h3></div>
+      <p class="hint">Checked after every refresh + scan; fire once to
+        Telegram, then disarm (re-add to re-arm).</p>
+      <div class="add-row">
+        <select id="alSymbol"></select>
+        <select id="alKind"></select>
+        <input id="alValue" type="number" placeholder="Value" style="width:110px">
+        <button id="alAdd" class="btn">Add alert</button>
+      </div>
+      <div id="alMsg" class="inline-msg hidden"></div>
+      <div id="alList" class="div-list"></div>
+    </div>
+  </section>
+
+  <!-- ============================ PORTFOLIO ============================ -->
+  <section id="page-portfolio" class="page hidden">
+    <div class="page-head"><h1 class="h1-ico"><svg class="ico ico-pie"><use href="#i-pie"/></svg>Portfolio</h1>
+      <div class="add-row">
+        <button id="pfExport" class="btn btn-small" title="Download holdings as CSV">Export CSV</button>
+        <label class="btn btn-small" title="Rows: symbol,qty,buy_price,buy_date" style="cursor:pointer">
+          Import CSV<input id="pfImport" type="file" accept=".csv,text/csv" hidden></label>
+      </div>
+    </div>
+    <div id="pfTotals" class="summary-row"></div>
+    <div id="pfCurveCard" class="card hidden">
+      <div class="card-head">
+        <h3>Portfolio value over time</h3>
+        <div class="chart-legend">
+          <span><i class="dot" style="background:var(--primary)"></i>Value</span>
+          <span><i class="dot" style="background:var(--muted)"></i>Invested</span>
+          <span id="bmLegend" class="hidden"><i class="dot" style="background:#D9B45B"></i>NIFTYBEES (same cash flows)</span>
+        </div>
+      </div>
+      <div id="pfCurve" class="chart-box"></div>
+      <p class="hint">Each holding counts from its buy date; the grey step
+        line is money put in. The gap between the two lines is your P&amp;L.</p>
+    </div>
+    <div class="grid-2">
+      <div>
+        <div id="pfTable" class="card table-card"></div>
+        <div id="pfPnlCard" class="card hidden">
+          <h3>P&amp;L by holding</h3>
+          <div id="pfPnlBars" class="hbar-list"></div>
+        </div>
+        <div id="pfCorr" class="card"></div>
+        <div class="card">
+          <div class="card-head"><h3>Mutual funds</h3>
+            <button class="btn btn-small" data-goto="funds">Funds page →</button></div>
+          <p class="hint">SIPs and fund holdings moved to their own page.</p>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>Rebalance helper</h3>
+            <button id="rbEq" class="btn btn-small" title="Set equal weights">Equal-weight</button></div>
+          <p class="hint">Set target weights; see the ₹ buy/sell needed to
+            get there. A worksheet — nothing is executed.</p>
+          <div id="rbBody"></div>
+        </div>
+
+      </div>
+      <div>
+        <div class="card">
+          <h3>Add holding</h3>
+          <div class="form-grid">
+            <select id="hSymbol"></select>
+            <input id="hQty" type="number" placeholder="Quantity">
+            <input id="hPrice" type="number" placeholder="Buy price">
+            <input id="hDate" type="date" title="Buy date">
+            <input id="hThesis" type="text" maxlength="200" placeholder="Why this buy? (thesis — shown back at sell time)">
+          </div>
+          <button id="hAdd" class="btn btn-primary">Add holding</button>
+          <div id="hMsg" class="inline-msg hidden"></div>
+        </div>
+        <div class="card">
+          <h3>Dividends received</h3>
+          <p class="hint">Cash that price-only P&amp;L can't see. Enter payouts
+            as they land; they're added into your total P&amp;L.</p>
+          <div class="form-grid">
+            <select id="dSymbol"></select>
+            <input id="dAmount" type="number" placeholder="Amount ₹">
+            <input id="dDate" type="date" title="Payout date">
+          </div>
+          <button id="dAdd" class="btn">Add dividend</button>
+          <div id="dMsg" class="inline-msg hidden"></div>
+          <div id="dList" class="div-list"></div>
+        </div>
+        <div id="pfRealizedCard" class="card hidden">
+          <h3>Realized P&amp;L</h3>
+          <div id="pfRealized"></div>
+        </div>
+        <div id="pfAllocCard" class="card hidden">
+          <h3>Allocation</h3>
+          <div class="donut-wrap">
+            <div id="pfDonut"></div>
+            <div id="pfDonutLegend" class="donut-legend"></div>
+          </div>
+        </div>
+        <div id="pfSectorCard" class="card hidden">
+          <h3>Sector exposure</h3>
+          <div id="pfSectors" class="hbar-list"></div>
+        </div>
+        <div class="card">
+          <h3>Position size</h3>
+          <p class="hint">Shares such that a stop-loss hit costs only X% of capital.</p>
+          <div class="form-grid">
+            <input id="psCap" type="number" placeholder="Capital ₹" value="100000">
+            <input id="psRisk" type="number" placeholder="Risk %" value="1" step="0.25">
+            <input id="psEntry" type="number" placeholder="Entry price">
+            <input id="psStop" type="number" placeholder="Stop price">
+          </div>
+          <div id="psOut" class="inline-msg hidden"></div>
+        </div>
+        <div class="card">
+          <h3>What-if simulator</h3>
+          <p class="hint">Try a hypothetical buy and see how your allocation
+            and concentration would shift — nothing is saved.</p>
+          <div class="form-grid">
+            <select id="wiSymbol"></select>
+            <input id="wiQty" type="number" placeholder="Quantity">
+            <input id="wiPrice" type="number" placeholder="Price (blank = last close)">
+          </div>
+          <button id="wiRun" class="btn">Simulate</button>
+          <div id="wiOut"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>Tax report</h3>
+            <button id="txBtn" class="btn btn-small">Compute</button></div>
+          <p class="hint">Realized gains per financial year, split
+            STCG / LTCG by the 1-year rule. For your CA — not advice.</p>
+          <div id="txOut"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== FUNDS ============================== -->
+  <section id="page-funds" class="page hidden">
+    <div class="page-head">
+      <h1 class="h1-ico"><svg class="ico ico-fund"><use href="#i-fund"/></svg>Mutual funds</h1>
+      <div class="add-row">
+        <div class="suggest-wrap">
+          <input id="mfSearch" type="text" placeholder="Add a fund · type 3+ letters (e.g. parag parikh flexi)" autocomplete="off" style="width:340px">
+          <div id="mfSuggest" class="suggest-box hidden"></div>
+        </div>
+      </div>
+    </div>
+    <div id="mfMsg" class="inline-msg hidden"></div>
+    <p class="hint">Official AMFI NAVs via mfapi.in (free, no key) — refreshed with
+      the rest of the data. Direct-growth plans are the ones to track;
+      regular plans carry a distributor fee.</p>
+    <div id="mfTotals" class="summary-row"></div>
+    <div id="mfTable" class="card table-card"><div class="skel"><div class="skel-row"></div><div class="skel-row"></div><div class="skel-row"></div></div></div>
+    <div class="grid-2">
+      <div>
+        <div class="card">
+          <div class="card-head"><h3>SIPs</h3></div>
+          <p class="hint">Monthly SIPs simulated against real NAV history —
+            installments executed on the next NAV date, value today, true XIRR.</p>
+          <div class="form-grid">
+            <select id="spScheme"></select>
+            <input id="spAmount" type="number" placeholder="₹ / month">
+            <input id="spDay" type="number" placeholder="Day (1–28)" min="1" max="28">
+            <input id="spStart" type="date" title="First installment">
+          </div>
+          <button id="spAdd" class="btn">Add SIP</button>
+          <div id="spList" class="div-list"></div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <h3>Lump-sum holding</h3>
+          <p class="hint">Units you bought outright (from your AMC / CAS
+            statement). Valued at the latest NAV; per account, like stock holdings.</p>
+          <div class="form-grid">
+            <select id="mhScheme"></select>
+            <input id="mhUnits" type="number" step="0.001" placeholder="Units">
+            <input id="mhNav" type="number" step="0.0001" placeholder="Buy NAV">
+            <input id="mhDate" type="date" title="Purchase date">
+          </div>
+          <button id="mhAdd" class="btn btn-primary">Add holding</button>
+          <div id="mhMsg" class="inline-msg hidden"></div>
+          <div id="mhList" class="div-list"></div>
+        </div>
+        <div class="card">
+          <h3>How to read the table</h3>
+          <p class="hint"><b>Rolling 1Y</b> is every 1-year holding period in
+            the fund's history: the median is what a typical year gave, the worst
+            is what an unlucky entry gave. A single "1Y return" depends on which
+            day you looked; the rolling range doesn't.
+            <b>vs NIFTYBEES</b> is the fund's 1Y return minus the index ETF's —
+            the fee-free alternative it has to beat.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ SCREENER ============================= -->
+  <section id="page-screener" class="page hidden">
+    <div class="page-head"><h1 class="h1-ico"><svg class="ico ico-funnel"><use href="#i-funnel"/></svg>Screener</h1>
+      <div class="add-row">
+        <select id="uniSelect" title="Which stocks queries run over">
+          <option value="watchlist">Universe: Watchlist</option>
+          <option value="nifty50">Universe: NIFTY 50</option>
+          <option value="nifty100">Universe: NIFTY 100</option>
+          <option value="nifty500">Universe: NIFTY 500</option>
+        </select>
+        <button id="uniPrep" class="btn hidden">Download data</button>
+      </div>
+    </div>
+    <div id="uniMsg" class="hint hidden"></div>
+    <div id="uniLog" class="refresh-log hidden"></div>
+    <div class="card">
+      <input id="nlqInput" type="text" class="wide"
+             placeholder="Ask in plain English · e.g. cheap IT stocks in an uptrend  (needs an LLM key in .env — OpenRouter or Groq)">
+      <div id="nlqGen" class="hint hidden"></div>
+    </div>
+    <div class="card">
+      <input id="qInput" type="text" class="wide"
+             placeholder="Query · pe < 25 and roe > 15 sort by mcap desc">
+      <div class="hint">Fields: pe pb roe margin divyield de eps beta mcap close rsi ret1m ret6m ret1y trend sector · and/or · sort by · top N</div>
+    </div>
+    <div id="qMsg" class="inline-msg hidden"></div>
+    <div id="qResults" class="card table-card"></div>
+  </section>
+
+  <!-- ============================= AI LAB ============================== -->
+  <section id="page-ailab" class="page hidden">
+    <div class="page-head"><h1 class="h1-ico"><svg class="ico ico-spark"><use href="#i-spark"/></svg>AI Lab</h1></div>
+    <div class="card">
+      <div class="card-head">
+        <h3>Factor rankings</h3>
+        <button id="rankBtn" class="btn">Compute</button>
+      </div>
+      <p class="hint">Momentum 30% · Value 25% · Quality 25% · Trend 20% — z-scored across your watchlist. A ranking, not a prediction.</p>
+      <div id="rankOut" class="table-card"></div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <h3>Next-day model <span class="tag-chip">educational</span></h3>
+        <div><select id="mlSymbol"></select>
+        <button id="mlBtn" class="btn">Train &amp; evaluate</button></div>
+      </div>
+      <p class="hint">Trained on the past, tested on the most recent 30% it never saw. Honest expectation: 50–55% accuracy.</p>
+      <div id="mlOut"></div>
+    </div>
+  </section>
+
+  <!-- ============================ BACKTEST ============================= -->
+  <section id="page-backtest" class="page hidden">
+    <div class="page-head"><h1 class="h1-ico"><svg class="ico ico-trend"><use href="#i-trend"/></svg>Backtest</h1></div>
+    <div class="card">
+      <div class="card-head">
+        <h3>Strategy vs buy-and-hold</h3>
+        <div class="add-row">
+          <select id="btSymbol"></select>
+          <select id="btStrategy" title="Trading rule to simulate"></select>
+          <input id="btCost" type="number" value="0.20" step="0.05" style="width:90px" title="Cost per side %">
+          <button id="btBtn" class="btn">Run</button>
+          <button id="btAllBtn" class="btn" title="Run every rule on this stock">Compare all</button>
+        </div>
+      </div>
+      <div id="btDesc" class="hint hidden"></div>
+      <div id="btStats" class="summary-row"></div>
+      <div id="btChart" class="chart-box"></div>
+      <div id="btSummary" class="inline-msg hidden"></div>
+      <div id="btBoard" class="table-card"></div>
+    </div>
+  </section>
+
+  <!-- ============================ SCORECARD ============================ -->
+  <section id="page-scorecard" class="page hidden">
+    <div class="page-head">
+      <h1 class="h1-ico"><svg class="ico ico-target"><use href="#i-target"/></svg>Scorecard</h1>
+      <div class="add-row">
+        <select id="scKind">
+          <option value="">All call types</option>
+          <option value="verdict">Verdict card</option>
+          <option value="checklist">Checklist tier</option>
+          <option value="ml_nextday">Next-day model</option>
+        </select>
+        <select id="scStatus">
+          <option value="">All</option>
+          <option value="resolved">Graded</option>
+          <option value="pending">Waiting</option>
+        </select>
+        <input id="scSymbol" type="text" placeholder="Symbol filter" style="width:150px">
+        <button id="scSnap" class="btn btn-small" title="Record today's verdict + checklist for every stock now (also runs after each refresh)">Snapshot all now</button>
+      </div>
+    </div>
+    <p class="hint">Every call the app shows you is written down with that day's
+      price and graded later against what actually happened — and against
+      NIFTYBEES over the same window. The app can't edit or delete these rows.
+      <b>strong / up</b> is right if the stock rose over the horizon,
+      <b>weak / down</b> if it fell; <b>mixed</b> makes no call and isn't scored.</p>
+    <div class="card" id="scTrackCard">
+      <div class="card-head"><h3>Stocks being tracked</h3>
+        <div class="add-row">
+          <button id="scAddWl" class="btn btn-small" title="Add every stock on the watchlist">+ watchlist</button>
+          <button id="scAddPf" class="btn btn-small" title="Add every stock you hold">+ portfolio</button>
+        </div></div>
+      <p class="hint">Only these get the daily automatic verdict + checklist snapshot.
+        Opening a stock still records the call you were shown; untick
+        "tracked only" below to see those too.</p>
+      <div class="add-row">
+        <div class="suggest-wrap">
+          <input id="scTrackInput" type="text" placeholder="Add a symbol · RELIANCE or RELIANCE.NS" autocomplete="off" style="width:260px">
+          <div id="scTrackSuggest" class="suggest-box hidden"></div>
+        </div>
+        <button id="scTrackAdd" class="btn">Track</button>
+        <label class="hint" style="margin-left:auto;display:flex;align-items:center;gap:6px">
+          <input type="checkbox" id="scTrackedOnly" checked> tracked only</label>
+      </div>
+      <div id="scTrackList" class="chip-list"></div>
+    </div>
+    <div id="scSummary" class="summary-row"></div>
+    <div id="scByKind"></div>
+    <div id="scMsg" class="inline-msg hidden"></div>
+    <div id="scTable" class="card table-card"></div>
+  </section>
+
+  <!-- ============================= JOURNAL ============================= -->
+  <section id="page-journal" class="page hidden">
+    <div class="page-head"><h1 class="h1-ico"><svg class="ico ico-book"><use href="#i-book"/></svg>Journal</h1></div>
+    <div id="jList" class="card table-card"></div>
+  </section>
+
+  <!-- ============================== MORE =============================== -->
+  <section id="page-more" class="page hidden">
+    <div class="page-head"><h1 class="h1-ico"><svg class="ico ico-grid"><use href="#i-grid"/></svg>More</h1></div>
+    <p class="hint">Best-effort tools quarantined from the core app: manual
+      or fragile data sources live here so their failures never touch your
+      watchlist, portfolio, or signals.</p>
+    <div class="grid-2">
+      <div>
+        <div class="card" id="doctorCard">
+          <div class="card-head"><h3 class="h3-ico"><svg class="ico ico-shield"><use href="#i-shield"/></svg>Data doctor</h3>
+            <div class="add-row">
+              <button id="drScan" class="btn btn-small">Scan</button>
+              <button id="drFix" class="btn btn-primary btn-small">Repair all</button>
+            </div></div>
+          <p class="hint">Finds symbols with missing or thin history and
+            repairs them in one batch — re-downloading and switching a
+            listing to its sister exchange (.BO ↔ .NS) when that side has
+            the real data.</p>
+          <div id="drSummary" class="summary-row hidden"></div>
+          <div id="drLog" class="refresh-log hidden"></div>
+          <div id="drTable" class="table-card"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>Shareholding pattern</h3>
+            <select id="shSymbol"></select></div>
+          <p class="hint">No free API serves this reliably, so it's manual by
+            design: after each quarter's filing, copy four numbers from
+            Screener.in or the exchange — the trend chart and warnings
+            (promoter drops, rising pledges) are then automatic.</p>
+          <div class="form-grid">
+            <input id="shQuarter" type="text" placeholder="Quarter · 2026-Q1">
+            <input id="shPromoter" type="number" placeholder="Promoter %">
+            <input id="shPledged" type="number" placeholder="Pledged %">
+            <input id="shFii" type="number" placeholder="FII %">
+            <input id="shDii" type="number" placeholder="DII %">
+            <button id="shAdd" class="btn">Save quarter</button>
+          </div>
+          <div id="shMsg" class="inline-msg hidden"></div>
+          <div id="shOut"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>Read about a stock</h3>
+            <select id="nwSymbol"></select></div>
+          <p class="hint">Honest version of a news feed: always-current links
+            instead of a stale scraper.</p>
+          <div id="nwLinks" class="home-actions"></div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-head"><h3>Options sentiment</h3>
+            <div class="add-row">
+              <input id="opSymbol" type="text" placeholder="Symbol · RELIANCE" style="width:150px">
+              <button id="opBtn" class="btn">Fetch</button>
+            </div></div>
+          <p class="hint">PCR and max pain from NSE's option chain — F&O
+            stocks and indices only. NSE's endpoints are moody; failures say
+            so plainly rather than showing stale numbers. Sentiment context,
+            not a signal.</p>
+          <div id="opOut"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>Weekly digest</h3>
+            <button id="dgBtn" class="btn btn-small">Generate</button></div>
+          <p class="hint">The same summary the Telegram bot sends —
+            portfolio week-on-week, watchlist signals, and results ahead.</p>
+          <pre id="dgOut" class="digest-pre hidden"></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========================== DETAIL DRAWER ============================ -->
+<div id="drawerScrim" class="scrim hidden"></div>
+<aside id="drawer" class="drawer">
+  <div class="drawer-head">
+    <div class="drawer-id">
+      <div id="drawerAvatar" class="sym-avatar">—</div>
+      <div>
+        <div id="drawerTitle" class="drawer-title">—</div>
+        <input id="drawerTag" class="tag-input" placeholder="tag…">
+      </div>
+    </div>
+    <div class="drawer-actions">
+      <button id="drawerWatch" class="btn hidden">+ Watch</button>
+      <button id="drawerClose" class="btn-icon">✕</button>
+    </div>
+  </div>
+  <div id="drawerBody" class="drawer-body"></div>
+</aside>
+
+<script src="/static/js/app.js"></script>
+<script src="/static/js/analyst.js"></script>
+<script src="/static/js/features.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js" defer></script>
+<script src="/static/js/ui-fx.js" defer></script>
+
+</body>
+</html>

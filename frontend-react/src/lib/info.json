@@ -1,0 +1,230 @@
+{
+  "golden_cross": {
+    "t": "Golden cross (SMA 50/200)",
+    "d": "Holds the stock while the average price of its last 50 days is above the average of its last 200 days — in plain words: while the recent trend is stronger than the long-term one.\n\nIt will never catch a bottom and always exits late, but it keeps you out of long declines. In a sideways stock it buys and sells repeatedly, losing a little each time — if the backtest shows many small losing trades, that's this stock telling you it chops too much for the rule."
+  },
+  "price_above_200": {
+    "t": "200-day filter",
+    "d": "Own the stock only while its price is above the average of its last 200 trading days (roughly one year); step aside when it's below.\n\nOne idea, honestly held: most disasters happen below that line. It reacts faster than the golden cross but also gets faked out more often. If plain buy-and-hold still beat it after costs, timing added nothing on this stock."
+  },
+  "rsi_reversion": {
+    "t": "RSI mean reversion (30/60)",
+    "d": "RSI is a 0–100 gauge of recent buying and selling pressure. This rule buys when RSI drops under 30 (the stock has been sold hard for ~2 weeks) and sells once it recovers past 60 — betting that panic gets corrected.\n\nWorks on steady stocks that bounce back. Dangerous on genuinely sinking ones, where 'sold hard' just keeps getting harder and the bounce never comes. Only trust it where the equity curve rose steadily, not in one lucky spike."
+  },
+  "macd": {
+    "t": "MACD signal cross (12-26-9)",
+    "d": "MACD compares the stock's recent average pace with a slower one; when the fast line crosses above its own smoothed average, the price is accelerating upward. This rule stays invested during those stretches.\n\nQuicker to react than the 50/200 cross — but it trades far more often, and every round trip pays brokerage. Check whether the shown return survived those costs."
+  },
+  "breakout": {
+    "t": "20/10 channel breakout",
+    "d": "Buy when today's close is the highest close of the last 20 days; sell when it's the lowest of the last 10.\n\nThe bet: a stock strong enough to make new highs tends to keep going. Works beautifully in long rallies. In a sideways market it keeps buying small peaks and selling small dips, losing a little each time — judge it by the equity curve after costs, not by the idea."
+  },
+  "GOLDEN_CROSS": {
+    "t": "Golden cross signal",
+    "d": "The 50-day average just crossed ABOVE the 200-day — the medium-term trend has officially turned up. Historically bullish, but check this stock's own base rate in the Watchlist detail: on some names it fires late enough to mark tops."
+  },
+  "DEATH_CROSS": {
+    "t": "Death cross signal",
+    "d": "The 50-day average just crossed BELOW the 200-day. The medium-term trend has turned down. Not always a sell — but adding to a position after one deserves an explicit reason."
+  },
+  "RSI_OVERSOLD": {
+    "t": "RSI oversold (<30)",
+    "d": "Selling pressure has been extreme for ~2 weeks. Either an over-reaction (opportunity on quality names) or the start of something worse (on leveraged/news-driven ones). Look at the base-rate panel: what happened the last N times THIS stock went under 30?"
+  },
+  "RSI_OVERBOUGHT": {
+    "t": "RSI overbought (>70)",
+    "d": "Buying has been one-sided for ~2 weeks. In strong uptrends RSI can stay overbought for months — it's a caution flag for fresh entries, not an automatic sell."
+  },
+  "PRICE_ALERT": {
+    "t": "Price alert",
+    "d": "Price crossed a level you set yourself on this stock. Your past self thought this level mattered — re-read the note you attached before acting."
+  },
+  "P/E": {
+    "t": "Price to Earnings",
+    "d": "Price divided by last year's earnings per share — how many years of current profit you pay for. Only comparable WITHIN a sector: banks at 15 and FMCG at 55 can both be 'fair'. A P/E far below sector median is either a bargain or a warning; the other columns decide which."
+  },
+  "P/B": {
+    "t": "Price to Book",
+    "d": "Price versus accounting net worth. The go-to multiple for banks and financials (their book value is mostly real, marked-to-market assets). Under ~1× means the market expects the book to shrink — ask why."
+  },
+  "ROE %": {
+    "t": "Return on Equity",
+    "d": "Profit generated per rupee shareholders have in the business. The single best one-number quality test: sustained 15%+ compounds wealth, sub-10% usually destroys it after inflation. Check it's not propped up by debt — high ROE + high D/E is leverage, not quality."
+  },
+  "D/E": {
+    "t": "Debt to Equity",
+    "d": "Borrowed money versus owners' money. Above ~1 for a non-financial company means creditors have more at stake than shareholders — fine in infra/utilities, dangerous in cyclicals. (Ignore for banks: leverage IS their business model.)"
+  },
+  "Div yield %": {
+    "t": "Dividend yield",
+    "d": "Cash paid out yearly as a % of price. A 4%+ yield on a stable business is real return you don't need the market's mood for; a suspiciously high yield often means the price crashed and a cut is coming."
+  },
+  "Beta": {
+    "t": "Beta",
+    "d": "How violently the stock moves versus the index. 1.5 = amplifies every swing by half again; 0.6 = sleeps through drama. Not good or bad — it sizes positions: high-beta names deserve smaller allocations for the same conviction."
+  },
+  "RSI": {
+    "t": "RSI 14",
+    "d": "A 0–100 gauge of how hard the stock has been bought or sold over the last 14 days. Under 30 = heavy selling; over 70 = heavy buying; 40–60 = nothing notable.\n\nBest used with the base-rate panel in the stock's dialog, which shows what RSI extremes actually led to on this specific stock — not in general."
+  },
+  "Momentum z": {
+    "t": "Momentum score",
+    "d": "How this stock's recent returns compare with everything else on your list, on a simple scale: 0 = average for your list, +2 ≈ near the top, −2 ≈ near the bottom.\n\nWinners tend to keep winning for months at a time — but they also fall hardest when the mood turns. That's why this is one input of four, not a verdict."
+  },
+  "Value z": {
+    "t": "Value score",
+    "d": "How cheap this stock looks (P/E and P/B blended) versus your list: 0 = average, positive = cheaper than most, negative = pricier.\n\nCheap alone is a trap. Pair it with the Quality score: cheap AND high-quality is the classic bargain; cheap and low-quality is usually cheap for a reason."
+  },
+  "Quality z": {
+    "t": "Quality score",
+    "d": "Business strength versus your list — profitability, margins, low debt — on the same scale: 0 = average, +2 ≈ best in list.\n\nHigh quality is what lets you hold through bad months without panicking. High momentum on a low-quality name is a rented rocket — fun until the fuel runs out."
+  },
+  "Trend z": {
+    "t": "Trend score",
+    "d": "Whether the price sits above or below its own recent averages, compared across your list: 0 = average, positive = an established uptrend.\n\nBuying a negative-trend stock means betting that everyone selling it is wrong — sometimes correct, always harder. The score just tells you which fight you're picking."
+  },
+  "Golden cross (SMA50 above SMA200)": {
+    "t": "Golden cross — this stock's own record",
+    "d": "The 50-day average crossed above the 200-day. The table shows every time it happened on THIS stock and what returns followed. Compare each row against the baseline block above — the signal only earned its keep where it beat 'any period'."
+  },
+  "Death cross (SMA50 below SMA200)": {
+    "t": "Death cross — this stock's own record",
+    "d": "The 50-day average crossed below the 200-day. Folklore says bearish; the table shows what ACTUALLY followed on this stock. If median returns after death crosses beat the baseline here, the market has been buying this dip."
+  },
+  "RSI dropped below 30": {
+    "t": "RSI oversold events",
+    "d": "RSI is a 0–100 gauge of recent selling pressure; under 30 means the stock has been dumped hard for about two weeks.\n\nOn steady stocks, the months after are usually green — the panic passes. On genuinely declining ones, 'oversold' just stays oversold while the price keeps falling. This table shows which kind of stock you're holding."
+  },
+  "RSI rose above 70": {
+    "t": "RSI overbought events",
+    "d": "Over 70 on the 0–100 pressure gauge means about two weeks of one-sided buying.\n\nTextbooks say 'overbought — expect a pullback'. But in strong uptrends, stocks sit above 70 for months while still rising. Check whether the months after were green HERE before treating 70 as a sell trigger."
+  },
+  "Any period (baseline)": {
+    "t": "Baseline — the bar to clear",
+    "d": "Forward returns from EVERY day in the sample, signal or no signal. This is what buying at random got you. Any signal block below must beat these numbers to mean anything — that's the whole discipline of base rates."
+  },
+  "Checklist verdict": {
+    "t": "Checklist call",
+    "d": "A fixed rule-set graded on this stock: trend, RSI zone, valuation sanity, drawdown state. Passing most checks reads as Buy, about half as Hold, few as Sell.\n\nThe pros and cons list below the call is the actual content. Rules are deliberately simple and consistent: the same bar for every stock, no story-telling."
+  },
+  "Median": {
+    "t": "Median outcome",
+    "d": "Line up every outcome from worst to best and take the middle one — half the times were better, half worse.\n\nUsed instead of the average so one freak +900% month can't flatter the number. Read it as the realistic middle expectation, not the dream case."
+  },
+  "Positive": {
+    "t": "Hit rate",
+    "d": "Out of all the times this happened, the percentage where the stock was HIGHER afterwards.\n\n50–55% is coin-flip territory. Well below that, together with a negative median, means this 'signal' has actually been bad news on this stock — whatever the textbook says."
+  },
+  "Best": {
+    "t": "Best case seen",
+    "d": "The single luckiest outcome in the sample. Shown to frame the range — never anchor a decision on it; someone always wins the lottery."
+  },
+  "Worst": {
+    "t": "Worst case seen",
+    "d": "The most painful outcome in the sample. Your position size should survive this repeating — that's what the sizer below the checklist is for."
+  },
+  "__verdict": {
+    "t": "How this call is built",
+    "d": "Buy, Hold or Sell from four independent checks: the checklist, the stock's composite-score rank on your watchlist, its trend against the 200-day average, and any active signals weighted by how they worked on this stock before.\n\nThe evidence for and against sits right next to the call. When the two lists disagree, that is where to look before you trade. Every call is recorded on the Scorecard and graded later, so you can see how often the app was right."
+  },
+  "__sizer": {
+    "t": "Position sizing",
+    "d": "shares = (capital × risk%) ÷ (entry − stop). You choose how much a failed idea costs BEFORE entering; the formula converts that into share count. Risking 1% per idea means surviving 20 straight mistakes — sizing, not stock-picking, is what keeps accounts alive."
+  },
+  "Doji": {
+    "t": "Doji",
+    "d": "One candle = one day of trading: the thick body stretches from the day's opening price to its closing price. A Doji is a day where the stock closed almost exactly where it opened — however much it moved in between, buyers and sellers ended in a tie.\n\nChart books read that tie as 'indecision — the trend might be about to turn'. The numbers beside it are the reality check: what this stock actually did in the month after each Doji. Seen 200+ times, it's basically an ordinary day here — if its numbers match the baseline at the top, this shape told you nothing."
+  },
+  "Hammer": {
+    "t": "Hammer",
+    "d": "A day where the price fell a long way during the session but climbed back to close near the top. On the chart that leaves a thin line (the 'wick') hanging below a small body — shaped like a hammer.\n\nThe story: sellers pushed hard, buyers won by the close, so maybe the decline is ending. The numbers beside it show what this stock really did in the month after each hammer. Also glance at the count — a shape seen only ~30 times can look good or bad by pure luck."
+  },
+  "Shooting star": {
+    "t": "Shooting star",
+    "d": "The upside-down hammer: price shot UP during the day but fell back to close near the bottom, leaving a thin line sticking up from a small body.\n\nThe story: buyers tried, sellers won — maybe the rise is ending. Now read the numbers: if this stock's record shows it mostly ROSE in the month after (it often does), then this 'bearish' shape simply hasn't worked here. Believe the record, not the story."
+  },
+  "Bullish engulfing": {
+    "t": "Bullish engulfing",
+    "d": "Two days read together: yesterday closed down; today closed up by so much that today's candle body completely covers yesterday's.\n\nThe story: buyers just overpowered the sellers — momentum may be turning up. The numbers beside it show what actually followed on this stock. If its month-after median is no better than the baseline at the top of this panel, the shape added nothing."
+  },
+  "Bearish engulfing": {
+    "t": "Bearish engulfing",
+    "d": "The reverse pair: yesterday closed up; today fell so hard that today's candle swallows yesterday's entire gain.\n\nThe story: sellers took control — a warning. But check this stock's own record first: on stocks in long rises, scary red days like this were often just pauses, and the month after was still green. That gap between the story and the record is exactly what this panel exists to show."
+  },
+  "Golden cross (SMA 50/200)": {
+    "t": "Golden cross rule",
+    "d": "In the market while the 50-day average is above the 200-day, in cash otherwise. Trend-following: exits late, enters late, but skips long bear phases. Few trades means low costs — and also that its CAGR here rests on a handful of decisions, so treat an outperformance as fragile."
+  },
+  "200-day filter": {
+    "t": "200-day filter rule",
+    "d": "Hold only when price closes above its 200-day average. Simplest regime filter there is; most crashes happen below the line. More trades than the golden cross = more whipsaw cost. Compare its Max fall column against holding — drawdown reduction is this rule's real product, not CAGR."
+  },
+  "RSI mean reversion (30/60)": {
+    "t": "RSI mean reversion rule",
+    "d": "Buys after heavy selling (RSI under 30 on the 0–100 pressure gauge), exits once things normalise (past 60).\n\nIf the table shows a decent win rate but a NEGATIVE CAGR, read it as: many small wins, a few huge losses — the rule kept buying real declines thinking they were panics. That combination is the classic way this style fails, and it's visible right in the row."
+  },
+  "MACD signal cross (12-26-9)": {
+    "t": "MACD cross rule",
+    "d": "Invested while the stock's price momentum is accelerating upward (the MACD line above its smoothed average), in cash otherwise.\n\nFast and busy: 50+ round trips in the Trades column means costs took a real bite. A win rate under 40% beside a high CAGR means a few big trends paid for many small stop-outs — normal for this style, but know that's the deal before following it."
+  },
+  "20/10 channel breakout": {
+    "t": "Channel breakout rule",
+    "d": "Buys whenever today's close is the highest of the past 20 days, sells whenever it's the lowest of the past 10 — chasing strength, cutting weakness.\n\nA low win rate next to a decent CAGR is normal for this style: many small losses, paid for by a few big rides. In a stock that goes sideways, it mostly donates money to brokerage — the Trades column shows how often it paid."
+  },
+  "CAGR %": {
+    "t": "Compound annual growth rate",
+    "d": "The rule's whole equity curve compressed to one yearly growth number, AFTER per-trade costs. Always read it against the buy-and-hold CAGR in the header — beating cash is easy, beating holding is the actual bar."
+  },
+  "Max fall %": {
+    "t": "Maximum drawdown",
+    "d": "The deepest peak-to-trough fall you'd have sat through following this rule. The psychological price of the CAGR: a 70% CAGR with a -49% drawdown was only earned by whoever didn't quit at the bottom. Size positions to survive this number repeating."
+  },
+  "Trades": {
+    "t": "Round trips",
+    "d": "How many entry+exit pairs the rule generated. Every trade pays brokerage twice and slippage always. Under ~10 trades the stats are anecdotes; over ~50, verify costs were modelled honestly (this backtest charges per side)."
+  },
+  "Win rate": {
+    "t": "Win rate",
+    "d": "Share of trades that closed green. Alone it's a vanity metric: trend rules win 35-45% of trades and still compound, because winners run and losers are cut. Read it WITH CAGR — never rank rules by win rate."
+  },
+  "Historical result": {
+    "t": "Verdict vs holding",
+    "d": "'Beat holding' means the rule outgrew simply buying and keeping the stock, after costs, over this sample. One stock, one decade, one result — check the same rule on your other stocks before believing an edge exists."
+  },
+  "Rule today": {
+    "t": "What the rule says now",
+    "d": "Where this rule would stand today if you had followed it all along.\n\n\"Holding the stock\" means the rule's condition is true right now, so it would own the stock. For the golden cross, that means the 50-day average is above the 200-day. \"Out of the stock\" means the condition is false, so the rule would have sold and be sitting in cash.\n\n\"Since\" is the day the rule last switched, and the line under it says what made it switch. This is a fact about the rule, not advice. If you own a stock the rule is out of, you are going against the rule. That can be fine, but know your reason."
+  },
+  "P(up tomorrow)": {
+    "t": "Model probability",
+    "d": "The model's probability that tomorrow closes higher. ONLY meaningful if Edge is positive — a confident number from a model that failed its test is noise wearing a suit. The banner below the cards is the honest verdict."
+  },
+  "Test accuracy": {
+    "t": "Out-of-sample accuracy",
+    "d": "Accuracy on the most recent ~30% of days the model never trained on — the only number that counts. Training accuracy is always flattering; unseen-data accuracy is where daily-price models routinely collapse to a coin flip."
+  },
+  "Naive baseline": {
+    "t": "The dumb benchmark",
+    "d": "Accuracy of always guessing the majority class (e.g. 'always up' in a rising sample). Any model must clear THIS, not 50% — a stock that rose 55% of days makes 55% the real zero line."
+  },
+  "Edge": {
+    "t": "Model edge",
+    "d": "Test accuracy minus the naive baseline, in points. Negative = the model knows less than a constant guess — the expected result for next-day prediction from daily prices, and the honest lesson this page exists to teach. Positive edges under ~3 pts are usually luck; re-train and watch them vanish."
+  },
+  "Score": {
+    "t": "Composite score",
+    "d": "Equal-weight blend of the four z-scores. A ranking device, NOT a buy list — its job is to push the best 5-10 candidates to the top so your research time goes where it matters. Always read the AI analyst teardown before acting on a high score."
+  },
+  "Cost per side": {
+    "t": "Cost per side",
+    "d": "What one trade costs, as a percentage of the amount traded. The backtest charges it once when the rule buys and again when it sells, so a full round trip costs twice this.\n\nIt stands for everything you lose to trading: brokerage, STT, exchange and SEBI fees, stamp duty, GST, and slippage (the gap between the price you saw and the price you got). On Indian delivery trades STT alone is 0.1% each way, so 0.1 is the floor. 0.15 to 0.25 is realistic with a discount broker.\n\nSet it to 0 to see the rule with no costs. Raise it to see how fast a rule that trades often loses its edge."
+  },
+  "Tracking period": {
+    "t": "Tracking period",
+    "d": "How long the Scorecard keeps watching a stock. Every day in that period, after the data refresh, it writes down the app's verdict and checklist tier for the stock with that day's price, so they can be graded later.\n\nWhen the period ends, the daily notes stop. Calls already written down stay, and are still graded when their time comes.\n\nFor a backtest rule, the period is also the horizon: the rule's call today is graded on what the stock did over that many days."
+  },
+  "Against NIFTYBEES": {
+    "t": "Against the index",
+    "d": "The stock's return over the call's horizon minus what NIFTYBEES (a Nifty 50 index fund) did over the same days. Positive means the stock beat simply owning the index. A call can be right on direction and still lose to the index."
+  }
+}
